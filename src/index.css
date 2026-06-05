@@ -1,0 +1,79 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #5d69f1;
+  --color-primary-dark: #4f5ae0;
+  --color-primary-light: #eef0fe;
+  --color-brand: #1e3a8a;
+  --color-surface: #f8fafc;
+  --color-success: #10b981;
+  --color-warning: #fbbf24;
+  --color-danger: #ef4444;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--color-surface);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button:not(:disabled),
+a,
+[role='button'],
+label:has(input[type='radio']),
+label:has(input[type='checkbox']),
+select,
+summary {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input[type='text'],
+input[type='password'],
+input[type='number'],
+input[type='date'],
+input[type='time'],
+textarea {
+  cursor: text;
+}
+
+/* Hide number input spinners (per Figma) */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+@keyframes shimmer {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse {
+  animation: shimmer 1.5s ease-in-out infinite;
+}
