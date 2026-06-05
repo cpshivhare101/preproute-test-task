@@ -8,6 +8,7 @@ import { authApi } from '../api/services'
 import { useAuthStore } from '../store/authStore'
 import { Logo } from '../components/ui/Logo'
 import { isApiSuccess } from '../api/utils'
+import type { AxiosError } from 'axios'
 
 const loginSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
@@ -45,12 +46,17 @@ export function LoginPage() {
         toast.success('Login successful')
         navigate('/dashboard', { replace: true })
       } else {
-        toast.error('Login failed. Please check your credentials.')
+        const message =
+          res.data?.message || 'Login failed. Please try again.'
+        toast.error(message)
       }
     } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>
       const message =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || 'Invalid credentials. Please try again.'
+        error?.response?.data?.message ||
+        error?.message ||
+        'Something went wrong. Please try again.'
+
       toast.error(message)
     } finally {
       setLoading(false)
