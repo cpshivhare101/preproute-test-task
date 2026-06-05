@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom' // useLocation
 import toast from 'react-hot-toast'
 import { authApi } from '../api/services'
 import { useAuthStore } from '../store/authStore'
@@ -18,9 +18,8 @@ type LoginForm = z.infer<typeof loginSchema>
 
 export function LoginPage() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const redirectTo =
-    (location.state as { from?: string } | null)?.from || '/dashboard'
+  // const location = useLocation()
+  // const redirectTo = (location.state as { from?: string } | null)?.from || '/dashboard'
   const setAuth = useAuthStore((s) => s.setAuth)
   const [loading, setLoading] = useState(false)
 
@@ -44,7 +43,7 @@ export function LoginPage() {
         )
 
         toast.success('Login successful')
-        navigate(redirectTo, { replace: true })
+        navigate('/dashboard', { replace: true })
       } else {
         toast.error('Login failed. Please check your credentials.')
       }

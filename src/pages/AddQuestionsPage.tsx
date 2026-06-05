@@ -325,38 +325,43 @@ export function AddQuestionsPage() {
   }
 
   const sidebar = (
-      <aside className="w-56 bg-white border-r border-gray-200 shrink-0 flex flex-col">
-        <div className="p-4 border-b border-gray-100">
-          <p className="text-sm font-semibold text-gray-800">Question creation</p>
-          <p className="text-xs text-gray-500 mt-1">Total Questions · {totalSlots}</p>
-        </div>
-        <div className="flex-1 overflow-y-auto p-3 space-y-1">
-          {Array.from({ length: totalSlots }, (_, i) => {
-            const done = i < questions.length
-            const active = i === activeIndex
-            return (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setActiveIndex(i)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer select-none ${
-                  active
-                    ? 'bg-primary-light text-primary hover:bg-primary/10'
-                    : done
-                      ? 'text-green-700 bg-green-50 hover:bg-green-100'
-                      : 'text-gray-500 hover:bg-gray-100'
+    <aside className="w-56 bg-white border-r border-gray-200 shrink-0 flex flex-col">
+      <div className="p-4 border-b border-gray-100">
+        <p className="text-sm font-semibold text-gray-800">Question creation</p>
+        <p className="text-xs text-gray-500 mt-1">Total Questions · {totalSlots}</p>
+      </div>
+      <div className="flex-1 overflow-y-auto p-3 space-y-1">
+        {Array.from({ length: totalSlots }, (_, i) => {
+          const done = i < questions.length
+          const active = i === activeIndex
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setActiveIndex(i)}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer select-none ${active
+                  ? 'bg-primary-light text-primary hover:bg-primary/10'
+                  : done
+                    ? 'text-green-700 bg-green-50 hover:bg-green-100'
+                    : 'text-gray-500 hover:bg-gray-100'
                 }`}
-              >
-                <span className="flex items-center gap-2">
-                  {done && <Check size={14} className="text-green-600" />}
-                  Question {i + 1}
-                </span>
-                <ChevronRight size={14} />
-              </button>
-            )
-          })}
-        </div>
-      </aside>
+            >
+              <span className="flex items-center gap-2">
+                {done ? (
+                  <span className="w-4 h-4 rounded-full bg-[#0C9D61] flex items-center justify-center">
+                    <Check size={12} className="text-white stroke-[3]" />
+                  </span>
+                ) : (
+                  <span className="w-4 h-4 rounded-full border border-gray-300" />
+                )}
+                Question {i + 1}
+              </span>
+              <ChevronRight size={14} />
+            </button>
+          )
+        })}
+      </div>
+    </aside>
   )
 
   if (loading || !currentTest) {
@@ -402,166 +407,166 @@ export function AddQuestionsPage() {
         </div>
       }
     >
-          <TestSummaryCard test={currentTest} />
+      <TestSummaryCard test={currentTest} />
 
-          <div className="mt-6 bg-white border border-gray-200 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900">
-                Question {activeIndex + 1}
-              </h3>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg"
-                >
-                  <Plus size={14} /> MCQ
-                </button>
-                <button
-                  type="button"
-                  className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg"
-                >
-                  CSV
-                </button>
-              </div>
-            </div>
+      <div className="mt-6 bg-white border border-gray-200 rounded-xl p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-gray-900">
+            Question {activeIndex + 1}
+          </h3>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg"
+            >
+              <Plus size={14} /> MCQ
+            </button>
+            <button
+              type="button"
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg"
+            >
+              CSV
+            </button>
+          </div>
+        </div>
 
-            <form onSubmit={handleSubmit(onSaveQuestion)}>
-              <div className="mb-4">
-                <QuestionFormatToolbar
-                  value={questionText}
-                  onChange={(v) => setValue('question', v, { shouldValidate: true })}
-                />
-                {errors.question && (
-                  <p className="mt-1 text-sm text-red-500">{errors.question.message}</p>
-                )}
-              </div>
-
-              <p className="text-sm text-gray-600 mb-3">Type the options below</p>
-              <div className="mb-6">
-                <DynamicOptionsEditor
-                  options={optionRows}
-                  correctOption={correctOption}
-                  onOptionsChange={(next) => {
-                    setOptionRows(next)
-                    if (!next.some((o) => o.key === correctOption)) {
-                      setValue('correct_option', next[0]?.key ?? 'option1')
-                    }
-                  }}
-                  onCorrectChange={handleCorrectChange}
-                  errors={optionErrors}
-                />
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Add Solution
-                </label>
-                <textarea
-                  {...register('explanation')}
-                  rows={3}
-                  placeholder="Type here"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-y"
-                />
-              </div>
-
-              <div className="border-t border-gray-100 pt-6">
-                <p className="text-sm font-semibold text-gray-800 mb-4">
-                  Question settings
-                </p>
-                {topics.length === 0 && (
-                  <p className="text-sm text-amber-600 mb-3">
-                    Topics could not be loaded. Check that this test has a valid subject.
-                  </p>
-                )}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                      Level of Difficulty
-                    </label>
-                    <select
-                      {...register('difficulty')}
-                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm"
-                    >
-                      <option value="">Select from Drop down</option>
-                      <option value="easy">Easy</option>
-                      <option value="medium">Medium</option>
-                      <option value="hard">Difficult</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Topic</label>
-                    <select
-                      value={selectedTopic}
-                      onChange={(e) => {
-                        setValue('topic', e.target.value)
-                        setValue('sub_topic', '')
-                      }}
-                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm"
-                    >
-                      <option value="">Select from Drop down</option>
-                      {topics.map((t) => (
-                        <option key={t.id} value={t.id}>
-                          {t.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Sub-topic</label>
-                    <select
-                      {...register('sub_topic')}
-                      disabled={!selectedTopic}
-                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm disabled:bg-gray-50"
-                    >
-                      <option value="">Select from Drop down</option>
-                      {subTopics.map((st) => (
-                        <option key={st.id} value={st.id}>
-                          {st.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end mt-4">
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-sm text-primary font-medium border border-primary rounded-lg hover:bg-primary-light"
-                >
-                  Save Question
-                </button>
-              </div>
-            </form>
+        <form onSubmit={handleSubmit(onSaveQuestion)}>
+          <div className="mb-4">
+            <QuestionFormatToolbar
+              value={questionText}
+              onChange={(v) => setValue('question', v, { shouldValidate: true })}
+            />
+            {errors.question && (
+              <p className="mt-1 text-sm text-red-500">{errors.question.message}</p>
+            )}
           </div>
 
-          {questions.length > 0 && (
-            <div className="mt-4 bg-white border border-gray-200 rounded-xl p-4">
-              <p className="text-sm font-semibold text-gray-800 mb-3">
-                Added Questions ({questions.length})
+          <p className="text-sm text-gray-600 mb-3">Type the options below</p>
+          <div className="mb-6">
+            <DynamicOptionsEditor
+              options={optionRows}
+              correctOption={correctOption}
+              onOptionsChange={(next) => {
+                setOptionRows(next)
+                if (!next.some((o) => o.key === correctOption)) {
+                  setValue('correct_option', next[0]?.key ?? 'option1')
+                }
+              }}
+              onCorrectChange={handleCorrectChange}
+              errors={optionErrors}
+            />
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Add Solution
+            </label>
+            <textarea
+              {...register('explanation')}
+              rows={3}
+              placeholder="Type here"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-y"
+            />
+          </div>
+
+          <div className="border-t border-gray-100 pt-6">
+            <p className="text-sm font-semibold text-gray-800 mb-4">
+              Question settings
+            </p>
+            {topics.length === 0 && (
+              <p className="text-sm text-amber-600 mb-3">
+                Topics could not be loaded. Check that this test has a valid subject.
               </p>
-              <ul className="space-y-2">
-                {questions.map((q, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center justify-between text-sm p-2 bg-gray-50 rounded-lg"
-                  >
-                    <span className="truncate flex-1">
-                      Q{i + 1}: {q.question.slice(0, 60)}
-                      {q.question.length > 60 ? '...' : ''}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setActiveIndex(i)}
-                      className="text-primary text-xs font-semibold ml-2 cursor-pointer hover:underline"
-                    >
-                      Edit
-                    </button>
-                  </li>
-                ))}
-              </ul>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">
+                  Level of Difficulty
+                </label>
+                <select
+                  {...register('difficulty')}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm"
+                >
+                  <option value="">Select from Drop down</option>
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Difficult</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Topic</label>
+                <select
+                  value={selectedTopic}
+                  onChange={(e) => {
+                    setValue('topic', e.target.value)
+                    setValue('sub_topic', '')
+                  }}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm"
+                >
+                  <option value="">Select from Drop down</option>
+                  {topics.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Sub-topic</label>
+                <select
+                  {...register('sub_topic')}
+                  disabled={!selectedTopic}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm disabled:bg-gray-50"
+                >
+                  <option value="">Select from Drop down</option>
+                  {subTopics.map((st) => (
+                    <option key={st.id} value={st.id}>
+                      {st.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          )}
+          </div>
+
+          <div className="flex justify-end mt-4">
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm text-primary font-medium border border-primary rounded-lg hover:bg-primary-light"
+            >
+              Save Question
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {questions.length > 0 && (
+        <div className="mt-4 bg-white border border-gray-200 rounded-xl p-4">
+          <p className="text-sm font-semibold text-gray-800 mb-3">
+            Added Questions ({questions.length})
+          </p>
+          <ul className="space-y-2">
+            {questions.map((q, i) => (
+              <li
+                key={i}
+                className="flex items-center justify-between text-sm p-2 bg-gray-50 rounded-lg"
+              >
+                <span className="truncate flex-1">
+                  Q{i + 1}: {q.question.slice(0, 60)}
+                  {q.question.length > 60 ? '...' : ''}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setActiveIndex(i)}
+                  className="text-primary text-xs font-semibold ml-2 cursor-pointer hover:underline"
+                >
+                  Edit
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </QuestionFlowLayout>
   )
 }
